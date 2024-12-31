@@ -13,7 +13,7 @@ function Gameboard() {
     const getBoard = () => board;  
 
     const placeMarker = (row, column, player) => {
-        if (board.getValue != 0) {
+        if (board[row][column].getValue() != "") {
             return;
         }
 
@@ -21,7 +21,7 @@ function Gameboard() {
     };
 
     const printBoard = () => {
-        const boardWithCellValues = board.map((row) => row.map((cell) => cell.getValue()))
+        const boardWithCellValues = board.map((row) => row.map((cell) => cell.getValue()));
         console.log(boardWithCellValues);
     };
 
@@ -32,7 +32,7 @@ function Cell() {
     let value = "";
 
     const addMarker = (player) => {
-        value = player;
+        value = player.marker;
     };
 
     const getValue = () => value;
@@ -71,7 +71,7 @@ function GameController(playerOneName = "Player One", playerTwoName = "Player Tw
 
     const playRound = (row, column) => {
         console.log(`Marking ${getActivePlayer().name}'s marker into row ${row}, column ${column}...`);
-        board.addMarker(row, column, getActivePlayer().marker);
+        board.placeMarker(row, column, getActivePlayer());
 
         // Check winner and win message
 
@@ -87,3 +87,4 @@ function GameController(playerOneName = "Player One", playerTwoName = "Player Tw
         getBoard: board.getBoard
     };
 }
+const game = GameController();
