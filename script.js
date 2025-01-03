@@ -92,6 +92,11 @@ function GameController(playerOneName = "Player One", playerTwoName = "Player Tw
         return false;
     };
 
+    const checkDraw = () => {
+        let boardCells = board.getBoard();
+        return boardCells.every((row) => row.every((cell) => cell.getValue() != ""));
+    };
+
     const playRound = (row, column) => {
         console.log(`Marking ${getActivePlayer().name}'s marker into row ${row}, column ${column}...`);
         board.placeMarker(row, column, getActivePlayer());
@@ -101,14 +106,10 @@ function GameController(playerOneName = "Player One", playerTwoName = "Player Tw
             console.log("Game over");
             return;
         }
-
-        const boardCells = board.getBoard();
-        if (!checkWinner()) {
-            let isGameDraw = boardCells.every((row) => row.every((cell) => cell.getValue() != ""));
-            if (isGameDraw) {
-                console.log("Game over too");
-                return;
-            }
+        
+        if (!checkWinner() && checkDraw()) {     
+            console.log("Game over too");
+            return;
         }
 
         switchPlayerTurn();
@@ -147,7 +148,7 @@ function ScreenController() {
         if (e.target.textContent != "") {
             return;
         }
-        
+
         const selectedRow = e.target.dataset.row;
         const selectedColumn = e.target.dataset.column;
 
