@@ -103,12 +103,12 @@ function GameController(playerOneName = "Player One", playerTwoName = "Player Tw
 
         // Check winner and win message
         if (checkWinner()) {
-            console.log("Game over");
+            console.log(`${activePlayer.name} won!`);
             return;
         }
         
-        if (!checkWinner() && checkDraw()) {     
-            console.log("Game over too");
+        if (checkDraw()) {     
+            console.log("Draw!");
             return;
         }
 
@@ -121,7 +121,9 @@ function GameController(playerOneName = "Player One", playerTwoName = "Player Tw
     return {
         playRound,
         getActivePlayer,
-        getBoard: board.getBoard
+        getBoard: board.getBoard,
+        checkDraw,
+        checkWinner
     };
 }
 
@@ -149,11 +151,25 @@ function ScreenController() {
             return;
         }
 
+        if (e.target.textContent === "" && game.checkWinner()) {
+            return;
+        }
+
         const selectedRow = e.target.dataset.row;
         const selectedColumn = e.target.dataset.column;
 
         game.playRound(selectedRow, selectedColumn);
         updateScreen();
+
+        if (game.checkWinner()) {
+            playerTurnDiv.textContent = `${game.getActivePlayer().name} won!`;
+            return;
+        }
+
+        if (game.checkDraw()) {
+            playerTurnDiv.textContent = "Draw!";
+            return;
+        }
     }
     boardDiv.addEventListener("click", clickHandlerBoard);
 
