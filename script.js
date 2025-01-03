@@ -1,11 +1,9 @@
 function Gameboard() {
-    const rows = 3;
-    const columns = 3;
     const board = [];
 
-    for (let i = 0; i < rows; i++) {
+    for (let i = 0; i < 3; i++) {
         board[i] = [];
-        for (let j = 0; j < columns; j++) {
+        for (let j = 0; j < 3; j++) {
             board[i].push(Cell());
         }
     }
@@ -69,11 +67,49 @@ function GameController(playerOneName = "Player One", playerTwoName = "Player Tw
         console.log(`${getActivePlayer().name}'s turn.`);
     };
 
+    const checkWinner = () => {
+        const boardCells = board.getBoard();
+        for (let i = 0; i < 3; i++) {
+            if (boardCells[i][0].getValue() === boardCells[i][1].getValue() && boardCells[i][0].getValue() === boardCells[i][2].getValue() && boardCells[i][0].getValue() != "") {
+                return true;
+            }
+        }
+
+        for (let i = 0; i < 3; i++) {
+            if (boardCells[0][i].getValue() === boardCells[1][i].getValue() && boardCells[0][i].getValue() === boardCells[2][i].getValue() && boardCells[0][i].getValue() != "") {
+                return true;
+            }
+        }
+
+        if (boardCells[0][0].getValue() === boardCells[1][1].getValue() && boardCells[0][0].getValue() === boardCells[2][2].getValue() && boardCells[0][0].getValue() != "") {
+            return true;
+        }
+
+        if (boardCells[0][2].getValue() === boardCells[1][1].getValue() && boardCells[0][2].getValue() === boardCells[2][0].getValue() && boardCells[0][2].getValue() != "") {
+            return true;
+        }
+
+        return false;
+    };
+
     const playRound = (row, column) => {
         console.log(`Marking ${getActivePlayer().name}'s marker into row ${row}, column ${column}...`);
         board.placeMarker(row, column, getActivePlayer());
 
         // Check winner and win message
+        if (checkWinner()) {
+            console.log("Game over");
+            return;
+        }
+
+        const boardCells = board.getBoard();
+        if (!checkWinner()) {
+            let isGameDraw = boardCells.every((row) => row.every((cell) => cell.getValue() != ""));
+            if (isGameDraw) {
+                console.log("Game over too");
+                return;
+            }
+        }
 
         switchPlayerTurn();
         printNewRound();
@@ -108,6 +144,10 @@ function ScreenController() {
     }; 
 
     function clickHandlerBoard(e) {
+        if (e.target.textContent != "") {
+            return;
+        }
+        
         const selectedRow = e.target.dataset.row;
         const selectedColumn = e.target.dataset.column;
 
