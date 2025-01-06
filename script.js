@@ -68,24 +68,24 @@ function GameController(playerOneName = "Player One", playerTwoName = "Player Tw
     };
 
     const checkWinner = () => {
-        const boardCells = board.getBoard();
+        const boardRows = board.getBoard();
         for (let i = 0; i < 3; i++) {
-            if (boardCells[i][0].getValue() === boardCells[i][1].getValue() && boardCells[i][0].getValue() === boardCells[i][2].getValue() && boardCells[i][0].getValue() != "") {
+            if (boardRows[i][0].getValue() === boardRows[i][1].getValue() && boardRows[i][0].getValue() === boardRows[i][2].getValue() && boardRows[i][0].getValue() != "") {
                 return true;
             }
         }
 
         for (let i = 0; i < 3; i++) {
-            if (boardCells[0][i].getValue() === boardCells[1][i].getValue() && boardCells[0][i].getValue() === boardCells[2][i].getValue() && boardCells[0][i].getValue() != "") {
+            if (boardRows[0][i].getValue() === boardRows[1][i].getValue() && boardRows[0][i].getValue() === boardRows[2][i].getValue() && boardRows[0][i].getValue() != "") {
                 return true;
             }
         }
 
-        if (boardCells[0][0].getValue() === boardCells[1][1].getValue() && boardCells[0][0].getValue() === boardCells[2][2].getValue() && boardCells[0][0].getValue() != "") {
+        if (boardRows[0][0].getValue() === boardRows[1][1].getValue() && boardRows[0][0].getValue() === boardRows[2][2].getValue() && boardRows[0][0].getValue() != "") {
             return true;
         }
 
-        if (boardCells[0][2].getValue() === boardCells[1][1].getValue() && boardCells[0][2].getValue() === boardCells[2][0].getValue() && boardCells[0][2].getValue() != "") {
+        if (boardRows[0][2].getValue() === boardRows[1][1].getValue() && boardRows[0][2].getValue() === boardRows[2][0].getValue() && boardRows[0][2].getValue() != "") {
             return true;
         }
 
@@ -129,14 +129,15 @@ function ScreenController() {
     const game = GameController();
     const playerTurnDiv = document.querySelector(".turn");
     const boardDiv = document.querySelector(".board");
+    let isGameOver = false;
 
     const updateScreen = () => {
-        const boardCells = game.getBoard();
+        const boardRows = game.getBoard();
         const activePlayer = game.getActivePlayer();
 
         playerTurnDiv.textContent = `${activePlayer.name}'s turn...`;
 
-        boardCells.forEach((row, indexRow) => {
+        boardRows.forEach((row, indexRow) => {
             row.forEach((cell, indexColumn) => {
                 const cellButton = document.querySelector(`button[data-row="${indexRow}"][data-column="${indexColumn}"]`);
                 cellButton.textContent = cell.getValue();
@@ -149,7 +150,7 @@ function ScreenController() {
             return;
         }
 
-        if (e.target.textContent === "" && game.checkWinner()) {
+        if (e.target.textContent === "" && isGameOver === true) {
             return;
         }
 
@@ -161,12 +162,12 @@ function ScreenController() {
 
         if (game.checkWinner()) {
             playerTurnDiv.textContent = `${game.getActivePlayer().name} won!`;
-            return;
+            isGameOver = true;
         }
 
         if (game.checkDraw()) {
             playerTurnDiv.textContent = "Draw!";
-            return;
+            isGameOver = true;
         }
     }
     boardDiv.addEventListener("click", clickHandlerBoard);
