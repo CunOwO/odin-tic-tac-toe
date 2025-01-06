@@ -165,11 +165,13 @@ function ScreenController() {
         if (game.checkWinner()) {
             playerTurnDiv.textContent = `${game.getActivePlayer().name} won!`;
             isGameOver = true;
+            return;
         }
 
         if (game.checkDraw()) {
             playerTurnDiv.textContent = "Draw!";
             isGameOver = true;
+            return;
         }
     }
 
@@ -185,7 +187,7 @@ function ScreenController() {
         if (game.getActivePlayer().name === "Player Two") {
             game.switchPlayerTurn();
         }
-        
+
         isGameOver = false;
         updateScreen();
     }
