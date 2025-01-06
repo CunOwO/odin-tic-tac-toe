@@ -93,15 +93,13 @@ function GameController(playerOneName = "Player One", playerTwoName = "Player Tw
     };
 
     const checkDraw = () => {
-        let boardCells = board.getBoard();
-        return boardCells.every((row) => row.every((cell) => cell.getValue() != ""));
+        return board.getBoard().every((row) => row.every((cell) => cell.getValue() != ""));
     };
 
     const playRound = (row, column) => {
         console.log(`Marking ${getActivePlayer().name}'s marker into row ${row}, column ${column}...`);
         board.placeMarker(row, column, getActivePlayer());
 
-        // Check winner and win message
         if (checkWinner()) {
             console.log(`${activePlayer.name} won!`);
             return;
@@ -133,12 +131,12 @@ function ScreenController() {
     const boardDiv = document.querySelector(".board");
 
     const updateScreen = () => {
-        const board = game.getBoard();
+        const boardCells = game.getBoard();
         const activePlayer = game.getActivePlayer();
 
         playerTurnDiv.textContent = `${activePlayer.name}'s turn...`;
 
-        board.forEach((row, indexRow) => {
+        boardCells.forEach((row, indexRow) => {
             row.forEach((cell, indexColumn) => {
                 const cellButton = document.querySelector(`button[data-row="${indexRow}"][data-column="${indexColumn}"]`);
                 cellButton.textContent = cell.getValue();
