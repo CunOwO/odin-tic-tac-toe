@@ -119,6 +119,7 @@ function GameController(playerOneName = "Player One", playerTwoName = "Player Tw
     return {
         playRound,
         getActivePlayer,
+        switchPlayerTurn,
         getBoard: board.getBoard,
         checkDraw,
         checkWinner
@@ -129,6 +130,7 @@ function ScreenController() {
     const game = GameController();
     const playerTurnDiv = document.querySelector(".turn");
     const boardDiv = document.querySelector(".board");
+    const restartBtn = document.querySelector(".restart");
     let isGameOver = false;
 
     const updateScreen = () => {
@@ -170,7 +172,26 @@ function ScreenController() {
             isGameOver = true;
         }
     }
+
+    function restartGame() {
+        game.getBoard().length = 0;
+        for (let i = 0; i < 3; i++) {
+            game.getBoard()[i] = [];
+            for (let j = 0; j < 3; j++) {
+                game.getBoard()[i].push(Cell());
+            }
+        }
+    
+        if (game.getActivePlayer().name === "Player Two") {
+            game.switchPlayerTurn();
+        }
+        
+        isGameOver = false;
+        updateScreen();
+    }
+
     boardDiv.addEventListener("click", clickHandlerBoard);
+    restartBtn.addEventListener("click", restartGame);
 
     updateScreen();
 }
